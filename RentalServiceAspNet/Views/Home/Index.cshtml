@@ -1,0 +1,41 @@
+@model List<RentalServiceAspNet.Models.Apartment>
+@{
+    ViewData["Title"] = "Главная";
+}
+
+<div class="home-page">
+    <h1>Сервис аренды недвижимости</h1>
+    <p class="subtitle">Найдите идеальное жилье для аренды</p>
+
+    <h2>Последние объявления</h2>
+    <div class="apartments-grid">
+        @if (Model != null && Model.Any())
+        {
+            @foreach (var apartment in Model)
+            {
+                <a href="/apartments/@apartment.Id" class="apartment-card">
+                    @if (!string.IsNullOrEmpty(apartment.MainPhoto))
+                    {
+                        <div class="card-image">
+                            <img src="@apartment.MainPhoto" alt="@apartment.Title" />
+                        </div>
+                    }
+                    <div class="card-content">
+                        <h3>@apartment.Title</h3>
+                        <p class="card-description">@(apartment.Description?.Length > 100 ? apartment.Description.Substring(0, 100) + "..." : apartment.Description)</p>
+                        <p class="card-price">@apartment.PricePerDay ₽/день</p>
+                    </div>
+                </a>
+            }
+        }
+        else
+        {
+            <p>Объявлений пока нет</p>
+        }
+    </div>
+    
+    <div style="text-align: center; margin-top: 3rem; display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap;">
+        <a href="/apartments" class="btn btn-primary">Посмотреть все объявления</a>
+        <a href="/apartments/add" class="btn btn-outline">Добавить объявление</a>
+    </div>
+</div>

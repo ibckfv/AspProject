@@ -1,0 +1,60 @@
+@{
+    ViewData["Title"] = "Профиль";
+}
+
+<div class="profile-page">
+    <h1>Профиль</h1>
+
+    <div id="profile-info" class="profile-info">
+        <p>Загрузка...</p>
+    </div>
+    
+    <div class="profile-actions">
+        <a href="/apartments/my" class="btn btn-primary">Мои объявления</a>
+        <a href="/bookings/my" class="btn btn-primary">Мои бронирования</a>
+    </div>
+</div>
+
+@section Scripts {
+<script>
+async function loadProfile() {
+    const token = localStorage.getItem('token');
+    if (!token) {
+        window.location.href = '/home/login';
+        return;
+    }
+    
+    try {
+        const response = await fetch('/api/auth/me', {
+            headers: {
+                'Authorization': 'Bearer ' + token
+            }
+        });
+        
+        if (response.status === 401) {
+            localStorage.removeItem('token');
+            window.location.href = '/home/login';
+            return;
+        }
+        
+        const data = await response.json();
+        
+        if (data.ok && data.user) {
+            document.getElementById('profile-info').innerHTML = `
+                <p><strong>Логин:</strong> ${data.user.login || ''}</p>
+                <p><strong>Имя:</strong> ${data.user.fullName || ''}</p>
+            `;
+        }
+    } catch (error) {
+        console.error('Ошибка загрузки профиля:', error);
+    }
+}
+
+function logout() {
+    localStorage.removeItem('token');
+    window.location.href = '/';
+}
+
+loadProfile();
+</script>
+}

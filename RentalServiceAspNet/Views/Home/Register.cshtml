@@ -1,0 +1,57 @@
+@{
+    ViewData["Title"] = "Регистрация";
+}
+
+<h1>Регистрация</h1>
+
+<form id="register-form">
+    <div>
+        <label for="fullName">Полное имя:</label>
+        <input type="text" id="fullName" name="fullName" required />
+    </div>
+    <div>
+        <label for="login">Логин:</label>
+        <input type="text" id="login" name="login" required />
+    </div>
+    <div>
+        <label for="password">Пароль:</label>
+        <input type="password" id="password" name="password" required />
+    </div>
+    <button type="submit">Зарегистрироваться</button>
+</form>
+
+<p id="register-error" style="color: red; display: none;"></p>
+
+@section Scripts {
+<script>
+document.getElementById('register-form').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const formData = {
+        fullName: document.getElementById('fullName').value,
+        login: document.getElementById('login').value,
+        password: document.getElementById('password').value
+    };
+    
+    try {
+        const response = await fetch('/api/auth/register', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(formData)
+        });
+        
+        const data = await response.json();
+        
+        if (data.ok) {
+            alert('Регистрация успешна! Войдите в систему.');
+            window.location.href = '/home/login';
+        } else {
+            document.getElementById('register-error').textContent = data.error || 'Ошибка регистрации';
+            document.getElementById('register-error').style.display = 'block';
+        }
+    } catch (error) {
+        document.getElementById('register-error').textContent = 'Ошибка соединения';
+        document.getElementById('register-error').style.display = 'block';
+    }
+});
+</script>
+}

@@ -1,0 +1,77 @@
+@{
+    ViewData["Title"] = "Все объявления";
+}
+
+<div class="apartments-page">
+    <div class="page-header">
+        <h1>Все объявления</h1>
+        <a href="/apartments/add" class="btn btn-primary">Добавить объявление</a>
+    </div>
+
+    <div class="content-wrapper">
+        <!-- Фильтры -->
+        <aside class="filters-panel">
+            <h2>Фильтры</h2>
+            <form id="filters-form">
+                <div class="filter-group">
+                    <label for="filter-city">Город:</label>
+                    <select id="filter-city" name="cityId">
+                        <option value="">Все города</option>
+                        @foreach (var city in ViewBag.Cities as List<RentalServiceAspNet.Models.City> ?? new List<RentalServiceAspNet.Models.City>())
+                        {
+                            <option value="@city.Id">@city.Name</option>
+                        }
+                    </select>
+                </div>
+
+                <div class="filter-group">
+                    <label for="filter-rooms">Комнат:</label>
+                    <select id="filter-rooms" name="rooms">
+                        <option value="">Любое</option>
+                        <option value="1">1</option>
+                        <option value="2">2</option>
+                        <option value="3">3</option>
+                        <option value="4">4+</option>
+                    </select>
+                </div>
+
+                <div class="filter-group">
+                    <label for="filter-price-min">Цена от:</label>
+                    <input type="number" id="filter-price-min" name="priceMin" placeholder="0" min="0">
+                </div>
+
+                <div class="filter-group">
+                    <label for="filter-price-max">Цена до:</label>
+                    <input type="number" id="filter-price-max" name="priceMax" placeholder="100000" min="0">
+                </div>
+
+                <div class="filter-group">
+                    <label>Удобства:</label>
+                    <div class="checkboxes">
+                        <label><input type="checkbox" name="furnished" value="true"> С мебелью</label>
+                        <label><input type="checkbox" name="parking" value="true"> Парковка</label>
+                        <label><input type="checkbox" name="petsAllowed" value="true"> Можно с питомцами</label>
+                        <label><input type="checkbox" name="internet" value="true" checked> Интернет</label>
+                    </div>
+                </div>
+
+                <div class="filter-actions">
+                    <button type="submit" class="btn btn-primary">Применить</button>
+                    <button type="button" id="reset-filters" class="btn btn-outline">Сбросить</button>
+                </div>
+            </form>
+        </aside>
+
+        <!-- Результаты -->
+        <main class="apartments-results">
+            <div id="results-count" class="results-count"></div>
+            <div id="apartments-container" class="apartments-grid">
+                <p>Загрузка...</p>
+            </div>
+        </main>
+    </div>
+</div>
+
+@section Scripts {
+<script src="~/js/apartments-list.js"></script>
+}

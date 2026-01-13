@@ -1,0 +1,57 @@
+@{
+    ViewData["Title"] = "Вход";
+}
+
+<h1>Вход</h1>
+
+<form id="login-form">
+    <div>
+        <label for="login">Логин:</label>
+        <input type="text" id="login" name="login" required />
+    </div>
+    <div>
+        <label for="password">Пароль:</label>
+        <input type="password" id="password" name="password" required />
+    </div>
+    <button type="submit">Войти</button>
+</form>
+
+<p id="login-error" style="color: red; display: none;"></p>
+
+@section Scripts {
+<script>
+document.getElementById('login-form').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const formData = {
+        login: document.getElementById('login').value,
+        password: document.getElementById('password').value
+    };
+    
+    try {
+        const response = await fetch('/api/auth/login', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(formData)
+        });
+        
+        const data = await response.json();
+        
+        if (data.ok && data.token) {
+            localStorage.setItem('token', data.token);
+            // Устанавливаем токен в cookie для MVC авторизации
+            document.cookie = `token=${data.token}; path=/; max-age=${60 * 60 * 24 * 7}; SameSite=Lax`;
+            // Проверяем returnUrl из параметров URL
+            const urlParams = new URLSearchParams(window.location.search);
+            const returnUrl = urlParams.get('returnUrl') || '/';
+            window.location.href = returnUrl;
+        } else {
+            document.getElementById('login-error').textContent = data.error || 'Ошибка входа';
+            document.getElementById('login-error').style.display = 'block';
+        }
+    } catch (error) {
+        document.getElementById('login-error').textContent = 'Ошибка соединения';
+        document.getElementById('login-error').style.display = 'block';
+    }
+});
+</script>
+}

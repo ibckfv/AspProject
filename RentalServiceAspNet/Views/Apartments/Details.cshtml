@@ -1,0 +1,138 @@
+@model RentalServiceAspNet.Models.Apartment
+@{
+    ViewData["Title"] = Model.Title;
+}
+
+<div class="apartment-details">
+    <div class="apartment-header">
+        <h1>@Model.Title</h1>
+        <div class="apartment-price">
+            <span class="price">@Model.PricePerDay ₽/день</span>
+            @if (Model.City != null)
+            {
+                <span class="location">@Model.City.Name</span>
+            }
+        </div>
+    </div>
+
+    <div class="apartment-content">
+        <div class="apartment-main">
+            <div class="apartment-photo">
+                @if (!string.IsNullOrEmpty(Model.MainPhoto))
+                {
+                    <img src="@Model.MainPhoto" alt="@Model.Title" />
+                }
+                else
+                {
+                    <div class="photo-placeholder">Нет фото</div>
+                }
+            </div>
+
+            <div class="apartment-info">
+                <h2>Описание</h2>
+                <p>@(Model.Description ?? "Описание отсутствует")</p>
+
+                <h2>Характеристики</h2>
+                <div class="apartment-features">
+                    @if (Model.Rooms.HasValue)
+                    {
+                        <div class="feature">
+                            <strong>Комнат:</strong> @Model.Rooms
+                        </div>
+                    }
+                    @if (Model.TotalArea.HasValue)
+                    {
+                        <div class="feature">
+                            <strong>Площадь:</strong> @Model.TotalArea м²
+                        </div>
+                    }
+                    @if (Model.Floor.HasValue)
+                    {
+                        <div class="feature">
+                            <strong>Этаж:</strong> @Model.Floor
+                        </div>
+                    }
+                    @if (!string.IsNullOrEmpty(Model.ViewType))
+                    {
+                        <div class="feature">
+                            <strong>Вид:</strong> @Model.ViewType
+                        </div>
+                    }
+                    @if (!string.IsNullOrEmpty(Model.Renovation))
+                    {
+                        <div class="feature">
+                            <strong>Ремонт:</strong> @Model.Renovation
+                        </div>
+                    }
+                </div>
+
+                <h2>Удобства</h2>
+                <div class="amenities">
+                    @if (Model.Furnished)
+                    {
+                        <span class="amenity-badge">С мебелью</span>
+                    }
+                    @if (Model.Internet)
+                    {
+                        <span class="amenity-badge">Интернет</span>
+                    }
+                    @if (Model.Parking)
+                    {
+                        <span class="amenity-badge">Парковка</span>
+                    }
+                    @if (Model.PetsAllowed)
+                    {
+                        <span class="amenity-badge">Можно с питомцами</span>
+                    }
+                </div>
+            </div>
+        </div>
+
+        <aside class="apartment-sidebar">
+            @if (User.Identity?.IsAuthenticated == true)
+            {
+                <div class="booking-panel">
+                    <h3>Забронировать</h3>
+                    <form id="booking-form">
+                        <input type="hidden" id="apartment-id" value="@Model.Id" />
+                        <div class="form-group">
+                            <label for="start-date">Дата заезда:</label>
+                            <input type="date" id="start-date" name="startDate" required />
+                        </div>
+                        <div class="form-group">
+                            <label for="end-date">Дата выезда:</label>
+                            <input type="date" id="end-date" name="endDate" required />
+                        </div>
+                        <div id="booking-summary" class="booking-summary" style="display: none;">
+                            <div class="summary-item">
+                                <span>Дней:</span>
+                                <span id="booking-days">0</span>
+                            </div>
+                            <div class="summary-item">
+                                <span>Итого:</span>
+                                <span id="booking-total">0 ₽</span>
+                            </div>
+                        </div>
+                        <button type="submit" class="btn btn-primary btn-block">Забронировать</button>
+                        <div id="booking-error" class="error-message" style="display: none;"></div>
+                    </form>
+                </div>
+
+                <div class="booked-dates">
+                    <h3>Занятые даты</h3>
+                    <div id="booked-dates-list">Загрузка...</div>
+                </div>
+            }
+            else
+            {
+                <div class="booking-panel">
+                    <p>Для бронирования необходимо <a href="/home/login">войти</a> в систему</p>
+                </div>
+            }
+        </aside>
+    </div>
+</div>
+
+@section Scripts {
+<script src="~/js/apartment-details.js"></script>
+}

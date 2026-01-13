@@ -1,0 +1,117 @@
+@{
+    ViewData["Title"] = "Добавить объявление";
+}
+
+<div class="apartment-add">
+    <h1>Добавить объявление</h1>
+    
+    <div id="auth-warning" class="info-message" style="display: none;">
+        <p>⚠️ Для создания объявления необходимо <a href="/home/login?returnUrl=/apartments/add">войти в систему</a></p>
+    </div>
+
+    <form id="apartment-form" class="apartment-form">
+        <div class="form-section">
+            <h2>Основная информация</h2>
+            
+            <div class="form-group">
+                <label for="title">Название *</label>
+                <input type="text" id="title" name="title" required />
+            </div>
+
+            <div class="form-group">
+                <label for="description">Описание</label>
+                <textarea id="description" name="description" rows="5"></textarea>
+            </div>
+
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="price-per-day">Цена за день (₽) *</label>
+                    <input type="number" id="price-per-day" name="pricePerDay" min="1" step="1" required />
+                </div>
+
+                <div class="form-group">
+                    <label for="city-id">Город</label>
+                    <select id="city-id" name="cityId">
+                        <option value="">Не указан</option>
+                        @foreach (var city in ViewBag.Cities as List<RentalServiceAspNet.Models.City> ?? new List<RentalServiceAspNet.Models.City>())
+                        {
+                            <option value="@city.Id">@city.Name</option>
+                        }
+                    </select>
+                </div>
+            </div>
+        </div>
+
+        <div class="form-section">
+            <h2>Характеристики</h2>
+            
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="rooms">Комнат</label>
+                    <input type="number" id="rooms" name="rooms" min="1" />
+                </div>
+
+                <div class="form-group">
+                    <label for="total-area">Площадь (м²)</label>
+                    <input type="number" id="total-area" name="totalArea" min="1" />
+                </div>
+
+                <div class="form-group">
+                    <label for="floor">Этаж</label>
+                    <input type="number" id="floor" name="floor" />
+                </div>
+            </div>
+
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="view-type">Вид</label>
+                    <input type="text" id="view-type" name="viewType" />
+                </div>
+
+                <div class="form-group">
+                    <label for="renovation">Ремонт</label>
+                    <input type="text" id="renovation" name="renovation" />
+                </div>
+
+                <div class="form-group">
+                    <label for="lighting">Освещение</label>
+                    <input type="text" id="lighting" name="lighting" />
+                </div>
+            </div>
+        </div>
+
+        <div class="form-section">
+            <h2>Удобства</h2>
+            <div class="checkboxes">
+                <label>
+                    <input type="checkbox" name="furnished" value="true" />
+                    С мебелью
+                </label>
+                <label>
+                    <input type="checkbox" name="internet" value="true" checked />
+                    Интернет
+                </label>
+                <label>
+                    <input type="checkbox" name="parking" value="true" />
+                    Парковка
+                </label>
+                <label>
+                    <input type="checkbox" name="petsAllowed" value="true" />
+                    Можно с питомцами
+                </label>
+            </div>
+        </div>
+
+        <div class="form-actions">
+            <button type="submit" class="btn btn-primary">Создать объявление</button>
+            <a href="/apartments" class="btn btn-outline">Отмена</a>
+        </div>
+
+        <div id="form-error" class="error-message" style="display: none;"></div>
+        <div id="form-success" class="success-message" style="display: none;"></div>
+    </form>
+</div>
+
+@section Scripts {
+<script src="~/js/apartment-add.js"></script>
+}

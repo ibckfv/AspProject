@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - RentalService</title>
+    <link rel="stylesheet" href="~/css/style.css" />
+</head>
+<body>
+    <header>
+        <div class="header-container">
+            <div class="logo">
+                <a href="/">🏠 RentalService</a>
+            </div>
+            <nav id="main-nav">
+                <a href="/">Главная</a>
+                <a href="/apartments">Все объявления</a>
+                <a href="/apartments/add" class="btn-add">+ Добавить объявление</a>
+                <div id="auth-links" style="display: none;">
+                    <a href="/apartments/my">Мои объявления</a>
+                    <a href="/bookings/my">Мои бронирования</a>
+                    <a href="/home/profile">Профиль</a>
+                    <a href="#" onclick="logout(); return false;">Выход</a>
+                </div>
+                <div id="guest-links">
+                    <a href="/home/login">Вход</a>
+                    <a href="/home/register" class="btn-register">Регистрация</a>
+                </div>
+            </nav>
+        </div>
+    </header>
+    <main>
+        @RenderBody()
+    </main>
+    <footer>
+        <p>&copy; 2026 - RentalService</p>
+    </footer>
+    <script src="~/js/index.js"></script>
+    <script>
+        (function() {
+            const token = localStorage.getItem('token');
+            if (token) {
+                document.cookie = `token=${token}; path=/; max-age=${60 * 60 * 24 * 7}; SameSite=Lax`;
+            }
+        })();
+        
+        document.addEventListener('DOMContentLoaded', function() {
+            if (window.updateNavigation) {
+                window.updateNavigation();
+            }
+        });
+    </script>
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

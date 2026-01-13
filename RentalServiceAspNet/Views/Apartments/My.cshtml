@@ -1,0 +1,52 @@
+@model List<RentalServiceAspNet.Models.Apartment>
+@{
+    ViewData["Title"] = "Мои объявления";
+}
+
+<div class="my-apartments">
+    <div class="page-header">
+        <h1>Мои объявления</h1>
+        <a href="/apartments/add" class="btn btn-primary">Добавить объявление</a>
+    </div>
+
+    @if (Model != null && Model.Any())
+    {
+        <div class="apartments-grid">
+            @foreach (var apartment in Model)
+            {
+                <div class="apartment-card">
+                    @if (!string.IsNullOrEmpty(apartment.MainPhoto))
+                    {
+                        <div class="card-image">
+                            <img src="@apartment.MainPhoto" alt="@apartment.Title" />
+                        </div>
+                    }
+                    <div class="card-content">
+                        <h3>@apartment.Title</h3>
+                        <p class="card-price">@apartment.PricePerDay ₽/день</p>
+                        @if (apartment.City != null)
+                        {
+                            <p class="card-location">@apartment.City.Name</p>
+                        }
+                        <p class="card-status">
+                            Статус: 
+                            <span class="status-@(apartment.Status ?? "approved")">
+                                @(apartment.Status == "pending" ? "На модерации" : apartment.Status == "approved" ? "Одобрено" : "Отклонено")
+                            </span>
+                        </p>
+                        <div class="card-actions">
+                            <a href="/apartments/@apartment.Id" class="btn btn-outline">Просмотр</a>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    }
+    else
+    {
+        <div class="empty-state">
+            <p>У вас пока нет объявлений</p>
+            <a href="/apartments/add" class="btn btn-primary">Создать первое объявление</a>
+        </div>
+    }
+</div>
